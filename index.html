@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>World Cup R32 — Sharp's Deep Edge Report · June 28, 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Sora:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#070b16; --bg2:#0b1120; --panel:#0f1729; --panel2:#131d33; --line:#1e2b47;
+  --ink:#eaf0fb; --ink-dim:#9fb0cd; --ink-faint:#6b7c9c;
+  --pitch:#19d66b; --pitch-deep:#0a9c4a; --amber:#ffb020; --gold:#f5c542;
+  --ice:#41c5f0; --rose:#ff5c7a; --violet:#9b8cff;
+  --over:#19d66b; --under:#41c5f0; --flip:#ffb020;
+  --r:16px; --shadow:0 18px 48px -18px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:
+    radial-gradient(1200px 600px at 78% -8%, rgba(25,214,107,.10), transparent 60%),
+    radial-gradient(1000px 560px at 8% 4%, rgba(65,197,240,.09), transparent 55%),
+    var(--bg);
+  color:var(--ink); font-family:'Sora',system-ui,sans-serif; line-height:1.6;
+  -webkit-font-smoothing:antialiased; padding-bottom:64px;
+}
+.wrap{max-width:1080px; margin:0 auto; padding:0 22px}
+h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif; line-height:1.12; margin:0; letter-spacing:-.01em}
+.mono{font-family:'JetBrains Mono',monospace}
+a{color:var(--ice); text-decoration:none}
+.hero{position:relative; overflow:hidden; border-bottom:1px solid var(--line);
+  background:linear-gradient(180deg,#091022 0%, #070b16 100%);}
+.hero::before{content:""; position:absolute; inset:0; opacity:.5;
+  background-image:repeating-linear-gradient(90deg, transparent 0 78px, rgba(255,255,255,.025) 78px 79px);
+  pointer-events:none;}
+.hero::after{content:""; position:absolute; left:0; right:0; bottom:-1px; height:2px;
+  background:linear-gradient(90deg,var(--pitch),var(--ice),var(--amber));}
+.hero-inner{position:relative; padding:54px 0 40px}
+.eyebrow{display:inline-flex; align-items:center; gap:9px; font-family:'JetBrains Mono',monospace;
+  font-size:12px; letter-spacing:.22em; text-transform:uppercase; color:var(--pitch);
+  background:rgba(25,214,107,.08); border:1px solid rgba(25,214,107,.25); padding:6px 13px; border-radius:999px}
+.eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--pitch);box-shadow:0 0 0 4px rgba(25,214,107,.18)}
+.hero h1{font-size:clamp(34px,6vw,60px); font-weight:700; margin:18px 0 8px}
+.hero h1 .accent{background:linear-gradient(90deg,var(--pitch),var(--ice)); -webkit-background-clip:text; background-clip:text; color:transparent}
+.hero .sub{font-size:clamp(15px,2.2vw,19px); color:var(--ink-dim); max-width:720px}
+.hero .stamp{margin-top:20px; display:flex; flex-wrap:wrap; gap:10px}
+.chip{font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--ink-dim);
+  background:var(--panel); border:1px solid var(--line); border-radius:999px; padding:7px 13px}
+.chip b{color:var(--ink)}
+section{padding:40px 0 8px}
+.sec-head{display:flex; align-items:baseline; gap:14px; margin-bottom:20px}
+.sec-head .num{font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--pitch); padding-top:4px}
+.sec-head h2{font-size:clamp(22px,3.4vw,30px); font-weight:600}
+.sec-head .rule{flex:1; height:1px; background:linear-gradient(90deg,var(--line),transparent); align-self:center}
+.panel{background:linear-gradient(180deg,var(--panel),var(--bg2)); border:1px solid var(--line);
+  border-radius:var(--r); padding:24px 26px; box-shadow:var(--shadow)}
+.panel p{margin:0 0 12px} .panel p:last-child{margin-bottom:0}
+.lead{font-size:17px; color:var(--ink)}
+.themes{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px; margin-top:18px}
+.theme{background:var(--panel2); border:1px solid var(--line); border-left:3px solid var(--pitch);
+  border-radius:12px; padding:15px 17px; font-size:14.5px; color:var(--ink-dim)}
+.theme.under{border-left-color:var(--under)} .theme.flip{border-left-color:var(--flip)}
+.cod{display:grid; grid-template-columns:1.1fr 1fr; gap:16px; margin-top:4px}
+.cod-main{background:
+    radial-gradient(420px 200px at 90% 0%, rgba(245,197,66,.12), transparent 60%), var(--panel);
+  border:1px solid rgba(245,197,66,.3); border-radius:var(--r); padding:24px 26px; box-shadow:var(--shadow)}
+.cod-main .tag{font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--gold)}
+.cod-main h3{font-size:21px; margin:8px 0 10px}
+.cod-side{background:var(--panel); border:1px solid var(--line); border-radius:var(--r); padding:22px 24px}
+.cod-side .tag{font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--violet)}
+.cod-side h3{font-size:18px; margin:8px 0 10px}
+.board{display:grid; gap:12px}
+.bet{display:grid; grid-template-columns:auto 1fr auto; gap:16px; align-items:center;
+  background:var(--panel); border:1px solid var(--line); border-radius:13px; padding:15px 18px;
+  transition:border-color .2s, transform .2s}
+.bet:hover{border-color:rgba(25,214,107,.4); transform:translateX(3px)}
+.bet .rank{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:20px; color:var(--ink-faint); width:26px; text-align:center}
+.bet .body .game{font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.05em; color:var(--ink-faint); text-transform:uppercase}
+.bet .body .name{font-weight:600; font-size:16px; color:var(--ink); margin:1px 0 3px}
+.bet .body .why{font-size:13.5px; color:var(--ink-dim)}
+.bet .meta{text-align:right; min-width:120px}
+.bet .price{font-family:'JetBrains Mono',monospace; font-weight:700; font-size:17px; color:var(--pitch)}
+.bet .probs{font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink-faint); margin-top:2px}
+.badge{display:inline-block; font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:700;
+  letter-spacing:.08em; text-transform:uppercase; padding:3px 9px; border-radius:999px; margin-top:6px}
+.badge.strong{background:rgba(25,214,107,.16); color:var(--pitch); border:1px solid rgba(25,214,107,.35)}
+.badge.solid{background:rgba(65,197,240,.14); color:var(--ice); border:1px solid rgba(65,197,240,.32)}
+.badge.lean{background:rgba(255,176,32,.14); color:var(--amber); border:1px solid rgba(255,176,32,.3)}
+.badge.longshot{background:rgba(155,140,255,.14); color:var(--violet); border:1px solid rgba(155,140,255,.32)}
+.sgp{background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:18px 20px}
+.sgp h4{font-size:16px; margin-bottom:4px}
+.sgp .legs{list-style:none; padding:0; margin:12px 0}
+.sgp .legs li{display:flex; gap:10px; align-items:flex-start; padding:7px 0; border-bottom:1px dashed var(--line); font-size:14.5px}
+.sgp .legs li:last-child{border-bottom:none}
+.sgp .legs li::before{content:"\25B8"; color:var(--pitch); font-size:13px; margin-top:2px}
+.sgp .corr{font-size:13px; color:var(--ink-dim); background:var(--panel2); border-radius:9px; padding:10px 13px; margin-top:6px}
+.sgp .corr b{color:var(--ice)}
+.games{display:grid; gap:22px}
+.game{background:linear-gradient(180deg,var(--panel),var(--bg2)); border:1px solid var(--line);
+  border-radius:18px; overflow:hidden; box-shadow:var(--shadow);
+  opacity:0; transform:translateY(16px); animation:rise .6s forwards}
+@keyframes rise{to{opacity:1; transform:none}}
+.game-top{display:flex; justify-content:space-between; align-items:flex-start; gap:14px;
+  padding:20px 24px; border-bottom:1px solid var(--line);
+  background:linear-gradient(180deg, rgba(255,255,255,.02), transparent)}
+.game-top .matchup{font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:700}
+.game-top .vinfo{font-size:12.5px; color:var(--ink-faint); margin-top:4px; font-family:'JetBrains Mono',monospace}
+.atype{font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+  padding:6px 12px; border-radius:999px; white-space:nowrap}
+.atype.over{background:rgba(25,214,107,.14); color:var(--pitch); border:1px solid rgba(25,214,107,.34)}
+.atype.under{background:rgba(65,197,240,.13); color:var(--under); border:1px solid rgba(65,197,240,.32)}
+.atype.flip{background:rgba(255,176,32,.13); color:var(--flip); border:1px solid rgba(255,176,32,.3)}
+.atype.live{background:rgba(255,92,122,.16); color:var(--rose); border:1px solid rgba(255,92,122,.42)}
+.game.islive{border-color:rgba(255,92,122,.28)}
+.game.islive .game-top{background:linear-gradient(180deg, rgba(255,92,122,.06), transparent)}
+.tdy{background:rgba(245,197,66,.16); color:var(--gold); border:1px solid rgba(245,197,66,.4)}
+.game.istoday{border-color:rgba(245,197,66,.34)}
+.live-banner{display:flex; gap:12px; align-items:flex-start; margin-top:28px;
+  background:linear-gradient(180deg, rgba(245,197,66,.1), rgba(245,197,66,.03));
+  border:1px solid rgba(245,197,66,.32); border-radius:14px; padding:15px 18px; font-size:14.5px; color:var(--ink-dim)}
+.live-banner .pulse{flex-shrink:0; width:10px; height:10px; border-radius:50%; background:var(--gold); margin-top:6px;
+  box-shadow:0 0 0 0 rgba(245,197,66,.6); animation:pulse 1.8s infinite}
+.live-banner b{color:var(--ink)}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(245,197,66,.5)}70%{box-shadow:0 0 0 9px rgba(245,197,66,0)}100%{box-shadow:0 0 0 0 rgba(245,197,66,0)}}
+.game-body{padding:8px 24px 22px}
+.row{padding:16px 0; border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:none}
+.row .k{font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--pitch); margin-bottom:7px}
+.row.read .k{color:var(--ice)} .row.gd .k{color:var(--gold)} .row.lineup .k{color:var(--violet)}
+.row .v{font-size:14.5px; color:var(--ink-dim)}
+.row .v b{color:var(--ink)}
+.mini-board{display:grid; gap:9px; margin-top:4px}
+.mini{display:grid; grid-template-columns:1fr auto; gap:12px; align-items:center;
+  background:var(--panel2); border:1px solid var(--line); border-radius:11px; padding:11px 14px}
+.mini .n{font-weight:600; font-size:14.5px; color:var(--ink)}
+.mini .n .sub{display:block; font-weight:400; font-size:13px; color:var(--ink-dim); margin-top:2px}
+.mini .r{text-align:right; white-space:nowrap}
+.mini .r .p{font-family:'JetBrains Mono',monospace; font-weight:700; font-size:15px; color:var(--pitch)}
+.mini .r .pr{font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--ink-faint); margin-top:2px}
+.ls-row .r .p{color:var(--violet)}
+.model-line{font-family:'JetBrains Mono',monospace; font-size:12.5px; color:var(--ink-dim);
+  background:var(--bg2); border:1px solid var(--line); border-radius:9px; padding:11px 14px; overflow-x:auto; white-space:nowrap}
+footer{margin-top:48px; border-top:1px solid var(--line); padding-top:24px}
+.disclaimer{font-size:13px; color:var(--ink-faint); background:var(--panel); border:1px solid var(--line);
+  border-radius:12px; padding:16px 18px}
+.disclaimer b{color:var(--ink-dim)}
+@media(max-width:720px){ .cod{grid-template-columns:1fr} .bet{grid-template-columns:auto 1fr; } .bet .meta{grid-column:2; text-align:left; margin-top:6px} }
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap hero-inner">
+  <span class="eyebrow"><span class="dot"></span> Round of 32 &middot; First Knockout Round</span>
+  <h1>World Cup <span class="accent">Deep Edge Report</span></h1>
+  <p class="sub" id="hero-sub">Loading&hellip;</p>
+  <div class="stamp" id="hero-stamp"></div>
+</div></header>
+
+<main class="wrap" id="app"></main>
+
+<footer class="wrap"><div class="disclaimer" id="disclaimer"></div></footer>
+
+<script>
+const DATA = {
+  "meta": {
+    "heroSub": "The knockouts open. Today's only match — Canada–South Africa at SoFi — is the most efficiently priced game on the board; the sharper edges land tomorrow in Germany–Paraguay and Netherlands–Morocco. Numbers below are our own Dixon-Coles Poisson model (built from form, projected XIs, Opta & venue) held up against the de-vigged Kalshi + DraftKings price.",
+    "chips": ["4 games · Jun 28–29", "Source: Kalshi (no-vig) + DraftKings", "Model: Dixon-Coles Poisson", "Odds pulled Jun 28 ~midday ET", "Knockout: draw = 90 min only"],
+    "liveBanner": "<b>Timing &amp; freshness.</b> Canada–South Africa kicks <b>today, 3:00pm ET</b>; the other three are <b>Mon Jun 29</b>. Every starting XI here is PROJECTED until it locks ~75 min before kickoff. Lines move — <b>reprice before you bet</b> and re-confirm lineups.",
+    "disclaimer": "<b>Method:</b> Edge = our independent model probability vs the de-vigged market price (Kalshi no-vig + DraftKings) — never Kalshi-vs-DK line-shopping. Our lambdas are calibrated to roughly reproduce the market on 1X2, total and BTTS before any edge is claimed; small gaps (&lt;3 pts) are treated as noise, not edge. <b>Card rule (2026):</b> single yellow cards were WIPED after the group stage — there is NO group-stage carryover suspension risk in the R32 (only a red, or two yellows in one match, suspends a player for the R16). <b>Knockouts:</b> a 90-minute draw goes to extra time then penalties; all winner/double-chance/handicap markets here settle on the 90-minute result. <b>Variance is real and any single bet can lose</b> — a 60%-to-win bet still loses 4 times in 10. Bet only on legal books where you are, only what you can afford to lose, and reprice at kickoff. Not financial advice."
+  },
+  "narrative": "Round of 32 = win-or-go-home, so every group-stage lever the daily guide usually leans on — goal-difference targets, must-win math, third-place cutoffs — is gone. What replaces them: the draw is now a 90-minute outcome only, and in cagey knockouts the market pays an elevated <b>draw premium</b>. Three of the four favorites are fairly-to-richly priced and our model sits right on the market — there is no big, clean edge on the sides. The one true structural mispricing is <b>Germany</b>, whom the market lifts to 73% while both our model (65%) and Opta (55%) see a genuinely live underdog. And the cleanest repeatable value across the slate is on the <b>scorer board</b>, where focal-point strikers (Brobbey, Vinicius) are underpriced relative to how central they are to their team's attack.",
+  "themes": [
+    {"cls":"flip","txt":"<b>FADE THE BLOWOUT.</b> Germany–Paraguay: market 73% Germany, our model 65%, Opta 55%. The price is anchored on Germany's 10 group goals (7 vs Curacao). Paraguay +1.5 and the draw are the value; Germany −1.5 is the trap."},
+    {"cls":"under","txt":"<b>THE KNOCKOUT DRAW PREMIUM.</b> The market pays up for 90-min draws (Netherlands–Morocco a fat 30%). Where our model says the draw is too rich (NED–MAR, BRA–JPN) we back a side; where it's fair-to-cheap (GER–PAR) the draw itself is the bet."},
+    {"cls":"over","txt":"<b>SCORER EDGES &gt; SIDE EDGES.</b> The moneylines are mostly efficient; the value is on focal strikers the board underrates — Brobbey +255 and Vinicius +160 lead, with dog-side darts on Saibari +280 and Ueda +320."}
+  ],
+  "cardOfDay": {
+    "title": "Paraguay +1.5 (−115, DraftKings)",
+    "body": "The slate's tightest play. The market prices Germany to win by 2+ goals at ~50%; our Poisson model says 40%, and Opta is even more dog-friendly (Paraguay 23% to win outright vs the market's 9%). Paraguay are pure low-block survivalists — 0 goals in their last 5 World Cup knockout games but brutally hard to break down — and Diego Gomez's suspension hurts their attack, not their defense. Germany lost their dead-rubber finale to Ecuador, leaked in all three group games, and are without Schlotterbeck. The public is chasing a blowout that the line has already over-baked. ~7-point edge.",
+    "longshotTitle": "Ayase Ueda anytime (+320) — Japan vs Brazil",
+    "longshotBody": "Japan's center-forward and penalty taker who scored the WINNER against this same Brazil in Tokyo last October. With Brazil patching their right side (Danilo at RB) and Japan's whole plan built on springing transitions, Ueda is the dog-side scorer with a real mechanism — our model ~28–30% vs the +320 implied 24%. Small stake, concrete route."
+  },
+  "bestSingles": [
+    {"game":"Germany–Paraguay","bet":"Paraguay +1.5 (Asian handicap)","price":"−115 DK","marketProb":"53.5%","modelProb":"60.5%","confidence":"solid","rationale":"Germany NOT to win by 2+. Model (65% win) and Opta (55%) both see far less German dominance than the 73% price; Schlotterbeck out, defense leaked all three group games."},
+    {"game":"Netherlands–Morocco","bet":"Brian Brobbey anytime scorer","price":"+255 DK","marketProb":"28.2%","modelProb":"38.5%","confidence":"solid","rationale":"Confirmed starting CF, 3 group goals (brace + header), focal point of a 10-goal Dutch attack vs a beatable Morocco D. Slate's biggest scorer gap — verify it hasn't shortened below ~+220."},
+    {"game":"Brazil–Japan","bet":"Vinicius Jr anytime scorer","price":"+160 DK","marketProb":"38.5%","modelProb":"42%","confidence":"solid","rationale":"Scored in all 3 group games; with Raphinha OUT the creative load funnels to him against Japan's makeshift right side. Most reliable goal source on the pitch."},
+    {"game":"Germany–Paraguay","bet":"Paraguay or Draw (double chance)","price":"+220 DK","marketProb":"31%","modelProb":"35% (Opta 45%)","confidence":"solid","rationale":"The same fade with zero extra-time risk — Paraguay winning OR level at 90 both cash. Pure survivalists happy to take it to penalties."},
+    {"game":"Netherlands–Morocco","bet":"Netherlands to win (90 min)","price":"+120 DK","marketProb":"45.5%","modelProb":"51% (Opta 48%)","confidence":"lean","rationale":"The market's 30% draw looks rich (our 24%), which leaves the Dutch a touch cheap. The live downside: a cagey 1-1 into Bono's shootout sends Morocco through."},
+    {"game":"Canada–South Africa","bet":"Both Teams To Score — No","price":"+106 Kalshi","marketProb":"~53% (Kalshi)","modelProb":"58%","confidence":"lean","rationale":"South Africa scored 2 in 3 group games, both set-piece/penalty — sterile in open play. Edge is on KALSHI (~+106); DK is already −135 ≈ fair, so take it on Kalshi or pass."}
+  ],
+  "bestLongshots": [
+    {"game":"Brazil–Japan","bet":"Ayase Ueda anytime scorer","price":"+320 DK","mechanism":"Japan's CF + penalty taker; scored the winner vs Brazil in Oct 2025. Dog-side route through Brazil's patched right side; Japan-scores ~50% in our model."},
+    {"game":"Netherlands–Morocco","bet":"Ismael Saibari anytime scorer","price":"+280 DK","mechanism":"Morocco's sole CF scored in ALL THREE group games (first African to do so in one edition) and is the near-exclusive recipient of their limited chances."},
+    {"game":"Germany–Paraguay","bet":"Julio Enciso anytime scorer","price":"+550 DK","mechanism":"Paraguay's entire attack + set pieces in one man vs a leaky German line. Caveat: Almiron is back to share dead balls and Paraguay have scored 0 in 5 straight WC knockouts — speculative."},
+    {"game":"Canada–South Africa","bet":"South Africa to win (90 min)","price":"+475 DK","mechanism":"Smash-and-grab + elite shootout-pedigree keeper Williams. Our model (19%) and Opta (20%) both top the 17% price — it's the DRAW that's overpriced, so back the dog outright, not the SA-or-draw double chance."}
+  ],
+  "bestSGPs": [
+    {"game":"Germany–Paraguay — Fade the blowout","thesis":"Germany win without running it up; a cagey, low-event knockout.","legs":["Paraguay +1.5 (−115)","Under 3.5 total goals"],"correlation":"Both legs flow from one root cause — Germany break a deep block but don't rout it. Conditioning on 'no blowout' pulls the total down too.","stakeNote":"2 legs keeps variance low — the disciplined way to express the fade"},
+    {"game":"Netherlands–Morocco — Dutch control, Brobbey decisive","thesis":"Netherlands dictate and their focal striker finishes.","legs":["Netherlands double chance (win/draw)","Brian Brobbey anytime (+255)"],"correlation":"A Dutch-controlled game is exactly the script where Brobbey scores. Using double-chance (not the 90-min win) removes the extra-time landmine the fat 30% draw creates.","stakeNote":"Brobbey-anchored; the strongest scorer leg on the slate"},
+    {"game":"Brazil–Japan — Brazil control, Vini decisive","thesis":"Brazil dominate a low block, the tempo stays capped, Vinicius is the goal.","legs":["Brazil double chance (win/draw)","Vinicius Jr anytime (+160)","Under 3.5 total goals"],"correlation":"One script drives all three: Brazil control a low-event knockout and Vini scoring is the most likely mechanism for the Brazil goal within that low-scoring world.","stakeNote":"Verifier-confirmed; Vini is the anchor"},
+    {"game":"Canada–South Africa — Cagey grind","thesis":"Canada win low-scoring, South Africa blanked.","legs":["Canada draw-no-bet","Both Teams To Score — No","Under 3.5 total goals"],"correlation":"One root cause — SA parks the bus and can't score in open play — so all three resolve together; pricing them near-independently underrates the bundle. DNB sidesteps the draw-to-extra-time trap.","stakeNote":"The efficient game's best structural expression — don't also bet the legs at full size"}
+  ],
+  "gdSpecial": "In a knockout there is no goal-difference target — it's win-or-go-home, so the GD chase that drives group-stage OVERs is gone. GD mattered only to SEED this bracket: Morocco finished LEVEL ON POINTS with Brazil in Group C and lost top spot purely on goal difference, which dropped them onto the runner-up path and straight into the Netherlands. The live levers now are different. (1) <b>The draw is a 90-minute outcome only</b>, and the market prices a caution premium for it — fat in Netherlands–Morocco (30%) and Canada–South Africa (26%). Where our model says that premium is too rich (NED–MAR, BRA–JPN) we back a side; where it's fair-to-cheap (GER–PAR) we back the draw itself. (2) <b>Extra time and penalties</b> make shootout-pedigree keepers quietly valuable to underdogs — Bono (Morocco) and Williams (South Africa) are a real chunk of why those dogs have live equity even when out-shot. (3) <b>Alt-handicaps</b> are where a quality mismatch pays — and the only one the market has clearly too short is Germany −1.5/−2.5, which is exactly why the value is the Paraguay side of it.",
+  "startSit": "<b>Neymar (BRA)</b> — projected to START ON THE BENCH; his +195 anytime is a sub's price, Vinicius & Cunha are the live threats. <b>Alphonso Davies (CAN)</b> — missed all 3 group games (hamstring), bench at best; the 'Davies breaks the deadlock late' angle is speculation, and Cyle Larin STARTS alongside David. <b>Raphinha (BRA)</b> — OUT (hamstring); Paqueta now takes penalties, Bruno Guimaraes the corners/free kicks. <b>Diego Gomez (PAR)</b> — SUSPENDED (2nd group yellow), Paraguay's set-piece taker gone (Enciso inherits); Almiron is BACK from his red-card ban. <b>Deniz Undav (GER)</b> — 3 goals all off the bench, but ESPN's projected XI now has him starting; his +135 is fully priced either way. <b>Memphis Depay (NED)</b> — bench/limited minutes, fade props built on him. <b>Out:</b> Schlotterbeck (GER, knee), Kone (CAN, leg), Mitoma & Endo (JPN), Kubo (JPN, doubtful). <b>Card rule:</b> yellows were wiped after the group stage — no carryover suspension risk in the R32. <b>All XIs are PROJECTED until ~75 min pre-kickoff — reprice then.</b>",
+  "games": [
+    {
+      "matchup": "Canada vs South Africa",
+      "venue": "SoFi Stadium · Inglewood, CA (fixed roof, climate-controlled)",
+      "ko": "Sun Jun 28 · 3:00pm ET / 12:00pm PT · TODAY",
+      "archetype": "EFFICIENT · CAGEY GRIND",
+      "archClass": "today",
+      "lineupNote": "<b>PROJECTED.</b> Canada 4-3-3: Crepeau; Johnston, De Fougerolles, Cornelius, Laryea; Eustaquio, Saliba, Buchanan; David, Larin, Oluwaseyi. <b>Larin starts with David; Davies (hamstring) bench at best; Kone OUT.</b> South Africa 4-2-3-1 low block: Williams; Mudau, Okon, Mbokazi, Modiba; Mokoena, Mbatha; Maseko, Mofokeng, Appollis; Makgopa. <b>Zwane SUSPENDED</b> (red vs Mexico); Mokoena back from suspension.",
+      "incentive": "Pure house-money vs pressure. <b>South Africa are in the knockouts for the FIRST TIME EVER</b> (Group A runner-up) — nothing to lose, will sit deep and play for penalties behind shootout-pedigree keeper Williams. <b>Canada</b> (Group B runner-up, co-host) are the better, more talented side and expected to win; the winner gets the Netherlands/Morocco survivor in the R16.",
+      "ourRead": "Canada control territory against a two-line South African block that offers almost nothing in open play (2 goals in 3 group games, both set-piece/penalty; all three games Under 2.5). Expect a low-event grind Canada edges 1-0/2-0, with a live drift into extra time where Williams gives Bafana genuine shootout equity. The honest verdict: <b>this is the most efficiently priced game on the slate</b> — our model sits right on the market on the winner, the spread and the total. Lead lightly; the only real value is in the goal-suppression exotics and the underpriced dog tail.",
+      "model": "Our model: CAN 57% · Draw 24% · SA 19% | xG 1.58–0.78 · total 2.36 · BTTS-Yes 42% || Market 57/26/16 · Opta 56/24/20",
+      "gdAngle": "No GD target in a knockout. The lever is the draw→extra-time: the market's 26% draw is a touch rich vs our 24%, which is why South Africa to win in 90 (+475) prices a hair cheap (our 19%, Opta 20%). Take the dog outright, NOT the SA-or-draw double chance — that's overpriced at +110 because the draw is the inflated leg.",
+      "singles": [
+        {"bet":"Both Teams To Score — No","price":"+106 Kalshi","marketProb":"~53%","modelProb":"58%","confidence":"lean","rationale":"South Africa can't score in open play. Edge is on KALSHI (~+106); DK already −135 ≈ fair — take it on Kalshi or pass."}
+      ],
+      "longshots": [
+        {"bet":"South Africa to win (90 min)","price":"+475 DK","mechanism":"Smash-and-grab + elite shootout keeper Williams. Model (19%) and Opta (20%) both top the 17% price — the draw is what's overpriced."},
+        {"bet":"Teboho Mokoena anytime scorer","price":"~+700 (exotic)","mechanism":"SA captain + penalty/free-kick/corner taker, fresh off suspension. If South Africa score at all (~54%), it's most likely him from a dead ball — their actual scoring distribution."}
+      ],
+      "sgp": {"thesis":"Cagey grind — Canada win low-scoring, South Africa blanked.","legs":["Canada draw-no-bet","Both Teams To Score — No","Under 3.5 total goals"],"correlation":"One root cause: SA parks the bus and is sterile, so all three resolve together; near-independent pricing underrates the bundle. Draw-no-bet sidesteps the draw→extra-time trap."}
+    },
+    {
+      "matchup": "Brazil vs Japan",
+      "venue": "NRG Stadium · Houston, TX (retractable roof — likely closed/AC)",
+      "ko": "Mon Jun 29 · 1:00pm ET / 12:00pm CT",
+      "archetype": "FAVORITE CONTROL · SCORER VALUE",
+      "archClass": "over",
+      "lineupNote": "<b>PROJECTED.</b> Brazil 4-3-3 (Ancelotti): Alisson; Danilo, Marquinhos, Gabriel Magalhaes, Douglas Santos; Casemiro, Bruno Guimaraes, Paqueta; Rayan, Cunha, Vinicius. <b>NEYMAR projected to START ON THE BENCH; Raphinha OUT</b> (hamstring) — Paqueta on penalties, Bruno on set pieces. Japan 3-4-2-1 low block (Moriyasu): Suzuki; H. Ito, Tomiyasu, Itakura; Doan, Tanaka, Sano, Nakamura; J. Ito, Kamada; Ueda. <b>Kubo doubtful; Mitoma & Endo OUT.</b>",
+      "incentive": "<b>Brazil</b> (Group C winners, 5-time champions) are the pressure favorite, expected to reach at least the QF. <b>Japan</b> (Group F runner-up) are the house-money overachiever — unbeaten, fearless, and they BEAT this Brazil 3-2 in Tokyo last October. Winner likely faces a Group A/B side in the R16.",
+      "ourRead": "Brazil dominate the ball; Japan sit in a back-five and spring Doan/Maeda behind Brazil's patched right. Knockout caution caps the tempo — most likely a 1-0/2-1 Brazil win. <b>We do NOT make the draw a value bet</b>: our model has it at 21% vs the market's 24% (if anything the market is slightly high). The repeatable edge here is the scorer board, led by Vinicius; a modest lean to Over 2.5 (our 52% vs market 48%) exists but is secondary.",
+      "model": "Our model: BRA 59% · Draw 21% · JPN 19% | xG 1.82–0.92 · total 2.74 · BTTS-Yes 50% || Market 57/24/18 · Opta 58/24/18",
+      "gdAngle": "Brazil −1.5 is fairly priced — our model has Brazil by 2+ at 34% vs the market's ~33%, no edge. Don't chase the handicap; the controlled-favorite value is the scorer market (Vini), not the spread.",
+      "singles": [
+        {"bet":"Vinicius Jr anytime scorer","price":"+160 DK","marketProb":"38.5%","modelProb":"42%","confidence":"solid","rationale":"Scored in all 3 group games; Raphinha out funnels the creative load to him against Japan's makeshift right side."}
+      ],
+      "longshots": [
+        {"bet":"Ayase Ueda anytime scorer","price":"+320 DK","mechanism":"Japan's CF + penalty taker; scored the winner vs Brazil in Oct 2025. Dog-side route through Brazil's patched right; Japan-scores ~50%."}
+      ],
+      "sgp": {"thesis":"Brazil control a low-event knockout, Vinicius the decisive goal.","legs":["Brazil double chance (win/draw)","Vinicius Jr anytime (+160)","Under 3.5 total goals"],"correlation":"One script drives all three — Brazil dominate a low block, knockout tempo caps goals, and Vini scoring is the most likely mechanism for the Brazil goal inside that low-scoring world."}
+    },
+    {
+      "matchup": "Germany vs Paraguay",
+      "venue": "Gillette Stadium · Foxborough, MA (open-air · ~76°F, showers likely)",
+      "ko": "Mon Jun 29 · 4:30pm ET",
+      "archetype": "★ FADE THE BLOWOUT",
+      "archClass": "flip",
+      "lineupNote": "<b>PROJECTED.</b> Germany 4-2-3-1 (Nagelsmann): Neuer; Kimmich, Rudiger, Tah, Raum; Pavlovic, Nmecha; Sane, Musiala, Wirtz; Havertz. <b>Schlotterbeck OUT</b> (knee); Undav (3 goals, all off the bench) may now start. Paraguay 4-4-2 low block: Gill; Caceres, G. Gomez, Velazquez, Alonso; Almiron, Cubas, Galarza, Mauricio; Enciso, Avalos. <b>Diego Gomez SUSPENDED</b> (set-piece taker gone, Enciso inherits); <b>Almiron BACK</b> from his red-card ban.",
+      "incentive": "<b>Germany</b> (Group E winners, 4-time champions) are the heavy favorite — but lost their dead-rubber finale to Ecuador and leaked in all three group games. <b>Paraguay</b> are the ultimate house-money side: scraped in as a best-3rd-place qualifier, pure low-block survivalists who've scored 0 goals in their last 5 World Cup knockout games but are brutally hard to break down. They will happily make it ugly and chase penalties.",
+      "ourRead": "Germany monopolize the ball against two banks of four; their volume becomes low-value shots at a packed box. <b>THE KEY:</b> the market lifts Germany to 73%, but our model (65%) AND Opta (55%) both see a far more live underdog — the price is anchored on Germany's 10 group goals, 7 of which came against Curacao. We fade the blowout across the board: Paraguay +1.5, the double chance, the draw, and Under all carry value, while Germany −1.5/−2.5 is the trap. The risk: a single early German goal opens the game and the whole cagey cluster breaks at once.",
+      "model": "Our model: GER 65% · Draw 20% · PAR 15% | xG 1.95–0.79 · total 2.74 · GER by 2+ 40% || Market 73/18/9 · Opta 55/22/23",
+      "gdAngle": "This is the slate's one real handicap edge. The market prices Germany to win by 2+ at ~50%; our model says 40%. So Paraguay +1.5 (−115) is the headline play and Germany −1.5 is the trap — the GD mismatch the public is chasing is already over-baked into the German line.",
+      "singles": [
+        {"bet":"Paraguay +1.5 (Asian handicap)","price":"−115 DK","marketProb":"53.5%","modelProb":"60.5%","confidence":"solid","rationale":"Germany NOT to win by 2+. Model and Opta both see far less German dominance than the 73% price; Schlotterbeck out, leaked all 3 games."},
+        {"bet":"Paraguay or Draw (double chance)","price":"+220 DK","marketProb":"31%","modelProb":"35% (Opta 45%)","confidence":"solid","rationale":"Same fade, no extra-time risk — Paraguay win or level at 90 both cash."},
+        {"bet":"Draw (90 min)","price":"+450 DK","marketProb":"18%","modelProb":"20% (Opta 22%)","confidence":"lean","rationale":"Unlike NED–MAR, the knockout draw premium is fair-to-cheap here, and Paraguay's whole plan is to reach penalties."}
+      ],
+      "longshots": [
+        {"bet":"Julio Enciso anytime scorer","price":"+550 DK","mechanism":"Paraguay's entire attack + set pieces in one man vs a leaky German line. Caveat: Almiron's back to share dead balls and Paraguay scored 0 in their last 5 WC knockouts — speculative."}
+      ],
+      "sgp": {"thesis":"Cagey knockout — Germany win without running it up.","legs":["Paraguay +1.5 (−115)","Under 3.5 total goals"],"correlation":"Both legs flow from one root cause: Germany break a deep block but don't rout it. Conditioning on 'no blowout' pulls the total down too — a tight, low-variance 2-leg fade."}
+    },
+    {
+      "matchup": "Netherlands vs Morocco",
+      "venue": "Estadio BBVA · Monterrey, MEXICO (open-air · ~94°F day/73°F eve · de-facto Morocco crowd)",
+      "ko": "Mon Jun 29 · 9:00pm ET / 7:00pm local",
+      "archetype": "DUTCH ATTACK · LIVE DOG",
+      "archClass": "over",
+      "lineupNote": "<b>PROJECTED.</b> Netherlands 4-3-3 (Koeman): Verbruggen; Dumfries, Van Hecke, Van Dijk, Van de Ven; Gravenberch, De Jong, Reijnders; Malen, Brobbey, Gakpo. <b>Brobbey & Dumfries passed fit; Depay bench/limited — fade Depay props.</b> Morocco 4-2-3-1 (Ouahbi): Bounou; Hakimi, Diop, Riad, Mazraoui; Bouaddi, El Aynaoui; Brahim Diaz, Ounahi, El Khannous; Saibari. No suspensions.",
+      "incentive": "<b>NOT a favorite-vs-minnow.</b> Morocco are 2022 semifinalists who finished LEVEL ON POINTS with Brazil (lost Group C top spot only on goal difference), now with a likely de-facto home crowd in Monterrey and shootout king Bono in goal. <b>Netherlands</b> (Group F winners) are dark-horse contenders but leaked in all three group games. Winner gets the Canada/South Africa survivor — a soft R16 path that raises the stakes.",
+      "ourRead": "Netherlands dominate possession and work Gakpo/Dumfries wide; Morocco absorb and counter through Hakimi and the in-form Saibari. The market prices the draw at a fat 30% (knockout caution + Morocco's quality + the crowd); our model has it at 24%, Opta 27% — so the Dutch are a touch underpriced. <b>Important correction:</b> this is NOT the low-scoring lock some reads claim — the Netherlands scored 10 group goals and Morocco's defense is good, not impregnable (clean sheet only vs Scotland; shipped 2 to Haiti). The cleanest, most script-independent edge is Brobbey, who cashes whether the Dutch win 1-0 or 3-1.",
+      "model": "Our model: NED 51% · Draw 24% · MAR 26% | xG 1.57–1.03 · total 2.60 · BTTS-Yes 50% || Market 45/30/24 · Opta 48/27/25",
+      "gdAngle": "The draw is the lever here: the market's 30% is the slate's fattest draw line. Our model says it's too rich, which is why Netherlands to win 90 (+120) prices cheap. But the de-facto Morocco crowd + Bono's shootout edge are real — if it's a 1-1 grind, the dog advances on penalties. Back the Dutch lightly; lean the scorers.",
+      "singles": [
+        {"bet":"Brian Brobbey anytime scorer","price":"+255 DK","marketProb":"28.2%","modelProb":"38.5%","confidence":"solid","rationale":"Confirmed starting CF, 3 group goals (brace + header), focal point of a 10-goal attack vs a beatable Morocco D. Slate's biggest scorer gap — verify line hasn't shortened below ~+220."},
+        {"bet":"Netherlands to win (90 min)","price":"+120 DK","marketProb":"45.5%","modelProb":"51% (Opta 48%)","confidence":"lean","rationale":"Market's 30% draw looks rich (our 24%). Dutch quality edge — but a cagey 1-1 into Bono's shootout is the live downside."},
+        {"bet":"Cody Gakpo anytime scorer","price":"+235 DK","marketProb":"30%","modelProb":"35%","confidence":"lean","rationale":"Starts left in a front three that forces play wide; modest but real edge. (Both group goals came in the Sweden rout — concentrated form.)"}
+      ],
+      "longshots": [
+        {"bet":"Ismael Saibari anytime scorer","price":"+280 DK","mechanism":"Morocco's sole CF scored in ALL THREE group games and is the near-exclusive recipient of their chances."},
+        {"bet":"Achraf Hakimi anytime scorer","price":"+850 DK","mechanism":"Multi-route: corner/free-kick taker, penalty option, and a marauding RB vs a Dutch line that conceded every group game. Thin edge, fat number — a true dart."}
+      ],
+      "sgp": {"thesis":"Dutch control, Brobbey decisive.","legs":["Netherlands double chance (win/draw)","Brian Brobbey anytime (+255)"],"correlation":"A Netherlands-controlled game is exactly the script where their focal striker finishes; double-chance (not the 90-min win) removes the extra-time landmine the 30% draw creates."}
+    }
+  ]
+};
+
+const el=(t,c,h)=>{const e=document.createElement(t); if(c)e.className=c; if(h!=null)e.innerHTML=h; return e;};
+const app=document.getElementById('app');
+document.getElementById('hero-sub').innerHTML = DATA.meta.heroSub;
+const stamp=document.getElementById('hero-stamp');
+DATA.meta.chips.forEach(c=>{stamp.appendChild(el('span','chip',c));});
+document.getElementById('disclaimer').innerHTML = DATA.meta.disclaimer;
+if(DATA.meta.liveBanner){const lb=el('div','live-banner'); lb.appendChild(el('span','pulse')); lb.appendChild(el('div',null,DATA.meta.liveBanner)); app.appendChild(lb);}
+
+function sectionHead(num,title){
+  const h=el('div','sec-head');
+  h.appendChild(el('span','num',num));
+  h.appendChild(el('h2',null,title));
+  h.appendChild(el('div','rule'));
+  return h;
+}
+
+let s=el('section'); s.appendChild(sectionHead('01','The Slate Read'));
+let p=el('div','panel'); p.appendChild(el('p','lead',DATA.narrative));
+const th=el('div','themes');
+DATA.themes.forEach(t=>th.appendChild(el('div','theme '+(t.cls||''),t.txt)));
+p.appendChild(th); s.appendChild(p); app.appendChild(s);
+
+s=el('section'); s.appendChild(sectionHead('02','Card of the Day'));
+const cod=el('div','cod');
+const m=el('div','cod-main'); m.appendChild(el('div','tag','★ Tightest Play'));
+m.appendChild(el('h3',null,DATA.cardOfDay.title)); m.appendChild(el('p',null,DATA.cardOfDay.body));
+cod.appendChild(m);
+const sd=el('div','cod-side'); sd.appendChild(el('div','tag','⚡ Best Longshot'));
+sd.appendChild(el('h3',null,DATA.cardOfDay.longshotTitle)); sd.appendChild(el('p',null,DATA.cardOfDay.longshotBody));
+cod.appendChild(sd); s.appendChild(cod); app.appendChild(s);
+
+s=el('section'); s.appendChild(sectionHead('03','Top Singles — Our Number vs the Price'));
+const b=el('div','board');
+DATA.bestSingles.forEach((x,i)=>{
+  const r=el('div','bet');
+  r.appendChild(el('div','rank',(i+1)));
+  const body=el('div','body');
+  body.appendChild(el('div','game',x.game));
+  body.appendChild(el('div','name',x.bet));
+  body.appendChild(el('div','why',x.rationale));
+  r.appendChild(body);
+  const meta=el('div','meta');
+  meta.appendChild(el('div','price',x.price));
+  meta.appendChild(el('div','probs','mkt '+x.marketProb+' → our '+x.modelProb));
+  meta.appendChild(el('div','badge '+x.confidence,x.confidence));
+  r.appendChild(meta); b.appendChild(r);
+});
+s.appendChild(b); app.appendChild(s);
+
+s=el('section'); s.appendChild(sectionHead('04','Longshots With Legs'));
+const lsb=el('div','board');
+DATA.bestLongshots.forEach((x)=>{
+  const r=el('div','bet');
+  r.appendChild(el('div','rank','✦'));
+  const body=el('div','body');
+  body.appendChild(el('div','game',x.game));
+  body.appendChild(el('div','name',x.bet));
+  body.appendChild(el('div','why',x.mechanism));
+  r.appendChild(body);
+  const meta=el('div','meta');
+  meta.appendChild(el('div','price',x.price));
+  meta.appendChild(el('div','badge longshot','longshot'));
+  r.appendChild(meta); lsb.appendChild(r);
+});
+s.appendChild(lsb); app.appendChild(s);
+
+s=el('section'); s.appendChild(sectionHead('05','Correlated Same-Game Parlays'));
+const sg=el('div','board');
+DATA.bestSGPs.forEach(x=>{
+  const c=el('div','sgp');
+  c.appendChild(el('h4',null,x.game));
+  c.appendChild(el('p',null,x.thesis));
+  const ul=el('ul','legs'); x.legs.forEach(l=>ul.appendChild(el('li',null,l))); c.appendChild(ul);
+  c.appendChild(el('div','corr','<b>Why it correlates:</b> '+x.correlation+(x.stakeNote?' · '+x.stakeNote:'')));
+  sg.appendChild(c);
+});
+s.appendChild(sg); app.appendChild(s);
+
+s=el('section'); s.appendChild(sectionHead('06','The Knockout Lever — Draws, Extra Time & Bracket'));
+p=el('div','panel'); p.innerHTML='<p class="lead">'+DATA.gdSpecial+'</p>'; s.appendChild(p); app.appendChild(s);
+
+s=el('section'); s.appendChild(sectionHead('07','Start / Sit Watch — Check Before You Lock'));
+p=el('div','panel'); p.innerHTML='<p>'+DATA.startSit+'</p>'; s.appendChild(p); app.appendChild(s);
+
+s=el('section'); s.appendChild(sectionHead('08','Game-by-Game Breakdown'));
+const gw=el('div','games');
+DATA.games.forEach((g,gi)=>{
+  const isToday=g.archClass==='today';
+  const c=el('div','game'+(g.archClass==='live'?' islive':'')+(isToday?' istoday':'')); c.style.animationDelay=(gi*0.08)+'s';
+  const top=el('div','game-top');
+  const left=el('div'); left.appendChild(el('div','matchup',g.matchup));
+  left.appendChild(el('div','vinfo',g.venue+'  ·  '+g.ko));
+  top.appendChild(left);
+  top.appendChild(el('div','atype '+(isToday?'tdy':g.archClass),g.archetype));
+  c.appendChild(top);
+  const bd=el('div','game-body');
+  const addRow=(cls,k,v)=>{const r=el('div','row '+cls); r.appendChild(el('div','k',k)); r.appendChild(el('div','v',v)); bd.appendChild(r); return r;};
+  addRow('lineup','Lineups & News',g.lineupNote);
+  addRow('','What They’re Playing For',g.incentive);
+  addRow('read','Our Read — The Script',g.ourRead);
+  const mr=el('div','row read'); mr.appendChild(el('div','k','Model vs Market')); mr.appendChild(el('div','model-line',g.model)); bd.appendChild(mr);
+  if(g.singles && g.singles.length){
+    const r=el('div','row'); r.appendChild(el('div','k','Singles With Edge'));
+    const mb=el('div','mini-board');
+    g.singles.forEach(x=>{
+      const mi=el('div','mini');
+      const n=el('div','n',x.bet); n.appendChild(el('span','sub',x.rationale)); mi.appendChild(n);
+      const rr=el('div','r'); rr.appendChild(el('div','p',x.price));
+      rr.appendChild(el('div','pr',x.marketProb+' → '+x.modelProb));
+      rr.appendChild(el('div','badge '+x.confidence,x.confidence)); mi.appendChild(rr);
+      mb.appendChild(mi);
+    });
+    r.appendChild(mb); bd.appendChild(r);
+  }
+  if(g.longshots && g.longshots.length){
+    const r=el('div','row'); r.appendChild(el('div','k','Longshots'));
+    const mb=el('div','mini-board');
+    g.longshots.forEach(x=>{
+      const mi=el('div','mini ls-row');
+      const n=el('div','n',x.bet); n.appendChild(el('span','sub',x.mechanism)); mi.appendChild(n);
+      const rr=el('div','r'); rr.appendChild(el('div','p',x.price)); mi.appendChild(rr);
+      mb.appendChild(mi);
+    });
+    r.appendChild(mb); bd.appendChild(r);
+  }
+  if(g.sgp){
+    const r=el('div','row'); r.appendChild(el('div','k','Same-Game Parlay'));
+    const sgp=el('div','sgp');
+    sgp.appendChild(el('p',null,g.sgp.thesis));
+    const ul=el('ul','legs'); g.sgp.legs.forEach(l=>ul.appendChild(el('li',null,l))); sgp.appendChild(ul);
+    sgp.appendChild(el('div','corr','<b>Correlation:</b> '+g.sgp.correlation));
+    r.appendChild(sgp); bd.appendChild(r);
+  }
+  addRow('gd','Knockout / Bracket Angle',g.gdAngle);
+  c.appendChild(bd); gw.appendChild(c);
+});
+s.appendChild(gw); app.appendChild(s);
+</script>
+</body>
+</html>
